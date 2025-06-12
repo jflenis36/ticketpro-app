@@ -2,7 +2,8 @@ import axios from "axios";
 
 // Puedes usar variables de entorno (.env) si prefieres
 const api = axios.create({
-  baseURL: "http://localhost:8000/api",
+  baseURL: "https://ticketpro-api.onrender.com/api",
+  
 });
 
 // Interceptor para agregar token automáticamente
