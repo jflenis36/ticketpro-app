@@ -2,7 +2,7 @@ import axios from "axios";
 
 // Puedes usar variables de entorno (.env) si prefieres
 const api = axios.create({
-  baseURL: "https://ticketpro-api.onrender.com/api",
+  baseURL: import.meta.env.VITE_API_URL || "http://localhost:8000/api",
   
 });
 
