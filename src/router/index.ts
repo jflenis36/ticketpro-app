@@ -18,6 +18,30 @@ const routes = [
     component: Dashboard,
     meta: { requiresAuth: true }, // 👈 Ruta protegida
   },
+  {
+    path: "/tickets/create",
+    name: "CreateTicket",
+    component: () => import("../views/tickets/CreateTicket.vue"),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/tickets/:id/edit",
+    name: "EditTicket",
+    component: () => import("../views/tickets/EditTicket.vue"),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/tickets",
+    name: "TicketList",
+    component: () => import("../views/tickets/TicketList.vue"),
+    meta: { requiresAuth: true },
+  },
+  {
+  path: '/tickets/:id',
+  name: 'TicketDetails',
+  component: () => import('../views/tickets/TicketDetails.vue'),
+  meta: { requiresAuth: true }
+}
 ];
 
 const router = createRouter({
