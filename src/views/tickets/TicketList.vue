@@ -70,17 +70,23 @@
 import { onMounted, ref } from 'vue'
 import { getAllTickets } from '../../services/ticketService'
 import { useRouter } from 'vue-router'
+import { useToast } from 'vue-toast-notification'
+import { useLoadingStore } from '../../store/loadingStore'
 
 const router = useRouter()
 const tickets = ref([])
+const toast = useToast()
+const loading = useLoadingStore()
 
 const fetchTickets = async () => {
      try {
+          loading.show('Cargamdo tickets...')
           const response = await getAllTickets()
           tickets.value = response.data.data
      } catch (error) {
-          alert('Error al cargar los tickets')
-          console.error(error)
+          toast.error(error.message || 'Error al cargar los tickets.')
+     } finally {
+          loading.hide()
      }
 }
 

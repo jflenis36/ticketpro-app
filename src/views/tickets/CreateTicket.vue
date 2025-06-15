@@ -34,7 +34,6 @@ const handleSubmit = async (formData) => {
           router.push('/tickets')
      } catch (error) {
           toast.error(error.message || 'Hubo un error al crear el ticket')
-          console.error(error)
      } finally {
           loading.hide()
      }

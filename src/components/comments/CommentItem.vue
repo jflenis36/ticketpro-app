@@ -51,7 +51,7 @@ const toggleReplies = async () => {
                const res = await getReplies(props.comment.id)
                replies.value = res.data.data.replies
           } catch (err) {
-               console.error('Error al obtener respuestas:', err)
+               toast.error(error.message || 'Error al obtener respuestas:')
           } finally {
                loading.hide()
           }

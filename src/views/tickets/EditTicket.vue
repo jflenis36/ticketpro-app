@@ -53,8 +53,7 @@ onMounted(async () => {
           response.data.data.priority = validateFormData( response.data.data )
           ticket.value = response.data.data
      } catch (error) {
-          alert('Error al cargar el ticket')
-          console.error(error)
+          toast.error(error.message || 'Credenciales incorrectas o error de red.')
      } finally {
           loading.value = false
           loading2.hide()
@@ -70,7 +69,6 @@ const handleSubmit = async (updatedData) => {
           router.push('/tickets')
      } catch (error) {
           toast.error(error.message || 'Error al actualizar el ticket')
-          console.error(error)
      } finally {
           loading.value = false
           loading2.hide()
