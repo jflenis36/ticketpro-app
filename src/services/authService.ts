@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "https://ticketpro-api.onrender.com/api/auth"; // Ajusta esto a tu backend real
+const API_URL = "http://localhost:8000/api/auth"; // Ajusta esto a tu backend real
 
 export default {
      async login(formData) {

@@ -1,23 +1,24 @@
 <template>
-     <div class="mt-3 pl-4 border-l">
-          <p v-if="loading" class="text-sm text-gray-400">Cargando respuestas...</p>
-          <ul v-else>
-               <li v-for="r in replies" :key="r.id" class="mb-2">
-                    <p><strong>↪ Usuario {{ r.user_id }}</strong>: {{ r.content }}</p>
-                    <p class="text-xs text-gray-500">{{ formatDate(r.created_at) }}</p>
-               </li>
-               <p v-if="replies.length === 0" class="text-sm text-gray-400">No hay respuestas aún.</p>
-          </ul>
+     <div class="space-y-4">
+          <div v-for="reply in replies" :key="reply.id" class="mb-4 pl-6 border-l-2 border-blue-100">
+               <div class="flex items-start gap-3">
+                    <div class="pt-1 text-purple-500">↪️</div>
+                    <div class="w-full">
+                         <p class="font-semibold text-gray-800">Usuario {{ reply.user_id }}</p>
+                         <p class="text-gray-700 text-sm">{{ reply.content }}</p>
+                         <p class="text-xs text-gray-500 mt-1">{{ formatDate(reply.created_at) }}</p>
+                    </div>
+               </div>
+          </div>
+
+          <div v-if="replies.length === 0" class="text-gray-500 text-sm">
+               No hay respuestas aún.
+          </div>
      </div>
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
-import { getReplies } from '../../services/commentService'
-
-const props = defineProps({ commentId: Number })
-const replies = ref([])
-const loading = ref(false)
+const props = defineProps({ replies: Array }) // ✅ SOLO esto
 
 const formatDate = (d) =>
      new Date(d).toLocaleString('es-CO', {
@@ -26,16 +27,4 @@ const formatDate = (d) =>
           hour: '2-digit',
           minute: '2-digit'
      })
-
-onMounted(async () => {
-     loading.value = true
-     try {
-          const res = await getReplies(props.commentId)
-          replies.value = res.data.data.replies
-     } catch (err) {
-          console.error('Error al cargar respuestas:', err)
-     } finally {
-          loading.value = false
-     }
-})
 </script>

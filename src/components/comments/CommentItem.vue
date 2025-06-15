@@ -1,25 +1,30 @@
 <template>
-     <div class="border-b pb-4 mb-4">
-          <!-- Comentario principal -->
-          <p><strong>👤 Usuario {{ comment.user_id }}</strong>: {{ comment.content }}</p>
-          <p class="text-xs text-gray-500">{{ formatDate(comment.created_at) }}</p>
+     <div class="mb-6">
+          <div class="flex items-start gap-3">
+               <div class="pt-1 text-purple-600">👤</div>
+               <div class="w-full">
+                    <p class="font-semibold text-gray-800">Usuario {{ comment.user_id }}</p>
+                    <p class="text-gray-700 text-sm">{{ comment.content }}</p>
+                    <p class="text-xs text-gray-500 mt-1">{{ formatDate(comment.created_at) }}</p>
 
-          <!-- Acciones -->
-          <div class="mt-2 space-x-4">
-               <button class="text-blue-500 text-sm" @click="toggleReplyForm">
-                    {{ showReplyForm ? 'Cancelar' : 'Responder' }}
-               </button>
-               <button class="text-blue-500 text-sm" @click="toggleReplies">
-                    {{ showReplies ? 'Ocultar respuestas' : 'Ver respuestas' }}
-               </button>
+                    <div class="mt-2 flex gap-4 text-sm">
+                         <button class="text-blue-600 hover:underline" @click="toggleReplyForm">
+                              {{ showReplyForm ? 'Cancelar' : 'Responder' }}
+                         </button>
+                         <button class="text-blue-600 hover:underline" @click="toggleReplies">
+                              {{ showReplies ? 'Ocultar respuestas' : 'Ver respuestas' }}
+                         </button>
+                    </div>
+
+                    <div v-if="showReplyForm" class="mt-3">
+                         <CommentForm @posted="handleReply" />
+                    </div>
+
+                    <div v-if="showReplies" class="mt-4 pl-4 border-l-2 border-gray-200">
+                         <CommentReplies :replies="replies" />
+                    </div>
+               </div>
           </div>
-
-          <!-- Formulario de respuesta -->
-          <CommentForm v-if="showReplyForm" @posted="handleReply" />
-
-          <!-- Respuestas -->
-          <CommentReplies v-if="showReplies" :commentId="comment.id" />
-
      </div>
 </template>
 
@@ -28,25 +33,27 @@ import { ref } from 'vue'
 import CommentForm from './CommentForm.vue'
 import CommentReplies from './CommentReplies.vue'
 import { getReplies, postReply } from '../../services/commentService'
+import { useLoadingStore } from '../../store/loadingStore'
+import { useToast } from 'vue-toast-notification'
 
 const props = defineProps({ comment: Object })
-
 const showReplies = ref(false)
 const showReplyForm = ref(false)
 const replies = ref([])
-const loading = ref(false)
+const loading = useLoadingStore()
+const toast = useToast()
 
 const toggleReplies = async () => {
      showReplies.value = !showReplies.value
      if (showReplies.value && replies.value.length === 0) {
-          loading.value = true
           try {
+               loading.show('Cargando respuestas...')
                const res = await getReplies(props.comment.id)
                replies.value = res.data.data.replies
           } catch (err) {
                console.error('Error al obtener respuestas:', err)
           } finally {
-               loading.value = false
+               loading.hide()
           }
      }
 }
@@ -56,11 +63,18 @@ const toggleReplyForm = () => {
 }
 
 const handleReply = async (text) => {
-     await postReply(props.comment.id, { content: text })
-     toggleReplyForm()
-     replies.value = [] // limpia para volver a cargar
-     showReplies.value = false
-     await toggleReplies() // vuelve a cargar
+     try {
+          loading.show('Creando mensaje...')
+          await postReply(props.comment.id, { content: text })
+          toggleReplyForm()
+          replies.value = []
+          showReplies.value = false
+          await toggleReplies()
+     } catch {
+          toast.error(error.message || 'Error al crear mensaje.')
+     } finally {
+          loading.hide()
+     }
 }
 
 const formatDate = (d) =>

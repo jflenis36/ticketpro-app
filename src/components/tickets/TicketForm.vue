@@ -1,31 +1,42 @@
 <template>
-     <form @submit.prevent="submit">
-          <div class="mb-4">
-               <label class="block mb-1 text-sm font-medium">Título</label>
-               <input v-model="form.title" type="text" required class="w-full px-3 py-2 border rounded" />
-          </div>
+     <div class="bg-white shadow-xl rounded-xl p-6 border border-gray-200">
+          <form @submit.prevent="submit" class="space-y-5">
 
-          <div class="mb-4">
-               <label class="block mb-1 text-sm font-medium">Descripción</label>
-               <textarea v-model="form.description" rows="4" required
-                    class="w-full px-3 py-2 border rounded"></textarea>
-          </div>
+               <div>
+                    <label class="block text-sm font-medium text-gray-600 mb-1">Título</label>
+                    <input v-model="form.title" type="text" required
+                         class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                         placeholder="Escribe el título del ticket" />
+               </div>
 
-          <div class="mb-4">
-               <label class="block mb-1 text-sm font-medium">Prioridad</label>
-               <select v-model="form.priority" required class="w-full px-3 py-2 border rounded">
-                    <option value="">Selecciona una</option>
-                    <option value="alta">Alta</option>
-                    <option value="media">Media</option>
-                    <option value="baja">Baja</option>
-               </select>
-          </div>
+               <div>
+                    <label class="block text-sm font-medium text-gray-600 mb-1">Descripción</label>
+                    <textarea v-model="form.description" rows="4" required
+                         class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                         placeholder="Describe el problema o solicitud"></textarea>
+               </div>
 
-          <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-               Crear Ticket
-          </button>
-     </form>
+               <div>
+                    <label class="block text-sm font-medium text-gray-600 mb-1">Prioridad</label>
+                    <select v-model="form.priority" required
+                         class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none bg-white">
+                         <option value="">Selecciona una opción</option>
+                         <option value="alta">🔴 Alta</option>
+                         <option value="media">🟠 Media</option>
+                         <option value="baja">🟢 Baja</option>
+                    </select>
+               </div>
+
+               <div class="pt-2">
+                    <button type="submit"
+                         class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg font-semibold hover:bg-blue-700 transition duration-200">
+                         Crear Ticket
+                    </button>
+               </div>
+          </form>
+     </div>
 </template>
+
 
 <script setup>
 import { reactive, toRefs } from 'vue'
