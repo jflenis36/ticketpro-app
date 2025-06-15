@@ -37,12 +37,14 @@ cd ticketpro-front
 npm install
 ```
 
+
+
 ### Variables de entorno
 
 Crea un `.env` con:
 
 ```ini
-VITE_API_URL=https://tu-backend-url/api
+VITE_API_URL=https://ticketpro-api.onrender.com/api/auth
 ```
 
 ### Ejecución
@@ -52,6 +54,21 @@ npm run dev
 ```
 
 Abre: `http://localhost:5173`
+
+---
+
+## 🔑 Credenciales de Prueba
+
+Puedes acceder directamente a la aplicación desplegada para probarla:
+
+🌐 **URL:** [https://ticketpro-qhysqgk5r-jflenis36s-projects.vercel.app](https://ticketpro-qhysqgk5r-jflenis36s-projects.vercel.app)
+
+### 👤 Usuario de prueba:
+
+```bash
+📧 Correo: admin@email.com  
+🔑 Clave: admin
+```
 
 ---
 
