@@ -80,7 +80,7 @@ const loading = useLoadingStore()
 
 const fetchTickets = async () => {
      try {
-          loading.show('Cargamdo tickets...')
+          loading.show('Cargando tickets...')
           const response = await getAllTickets()
           tickets.value = response.data.data
      } catch (error) {
