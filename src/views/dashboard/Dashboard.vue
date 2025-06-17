@@ -6,10 +6,10 @@
 
           <!-- Estadísticas rápidas -->
           <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-               <StatCard label="Total de Tickets" :value="42">🗂</StatCard>
-               <StatCard label="Abiertos" :value="12">📂</StatCard>
-               <StatCard label="Cerrados" :value="20">✅</StatCard>
-               <StatCard label="En Revisión" :value="10">🔎</StatCard>
+               <StatCard label="Total de Tickets" :value="stats.total || 0">🗂</StatCard>
+               <StatCard label="Abiertos" :value="stats.open || 0">📂</StatCard>
+               <StatCard label="Cerrados" :value="stats.closed || 0">✅</StatCard>
+               <StatCard label="En Revisión" :value="stats.inProgress || 0">🔎</StatCard>
           </div>
 
           <!-- Actividad reciente + Acciones rápidas -->
@@ -36,26 +36,23 @@
 
 <script setup>
 import { useRouter } from 'vue-router'
-
 import DashboardHeader from '../../components/dashboard/DashboardHeader.vue'
 import StatCard from '../../components/dashboard/StatCard.vue'
 import DashboardNotes from '../../components/dashboard/DashboardNotes.vue'
 import ProjectSummaryCard from '../../components/dashboard/ProjectSummaryCard.vue'
 import QuickActions from '../../components/dashboard/QuickActions.vue'
 import RecentActivity from '../../components/dashboard/RecentActivity.vue'
+import { getInformation } from '../../services/dashboardService'
+import { ref, onMounted } from 'vue'
+import { useToast } from 'vue-toast-notification'
+import { useLoadingStore } from '../../store/loadingStore'
 
 const router = useRouter()
-
-const recent = [
-     { message: 'Ticket #123 actualizado por Camila', timestamp: '2025-06-10T18:30:00' },
-     { message: 'Ticket #122 creado por Andrés', timestamp: '2025-06-09T10:45:00' }
-]
-
-const projects = [
-     { id: 1, name: 'Proyecto A', description: 'Sistema de tickets para soporte', ticketCount: 12 },
-     { id: 2, name: 'Proyecto B', description: 'Módulo de gestión de usuarios', ticketCount: 5 }
-]
-
+const stats = ref({})
+const recent = ref([])
+const projects = ref([])
+const toast = useToast()
+const loading = useLoadingStore()
 const systemNotes = [
      'Recuerda revisar los tickets urgentes antes del mediodía.',
      'El módulo de usuarios estará en mantenimiento el viernes.',
@@ -66,4 +63,25 @@ const goToCreateTicket = () => router.push('/tickets/create')
 const goToTicketList = () => router.push('/tickets')
 const goToSettings = () => router.push('/admin/settings')
 const goToProject = (projectId) => router.push(`/projects/${projectId}`)
+
+onMounted(async () => {
+     try {
+          loading.show('Cargando información...')
+          const { data } = await getInformation()
+
+          stats.value = data.data.ticket_summary
+          recent.value = data.data.recent_tickets.map(ticket => ({
+               message: `Ticket #${ticket.id} ${ticket.status === 'closed' ? 'cerrado' : 'actualizado'} por ${ticket.user.name}`,
+               timestamp: ticket.updated_at
+          }))
+          projects.value = data.data.active_projects.map(p => ({
+               ...p,
+               ticketCount: p.tickets_count
+          }))
+     } catch (error) {
+          toast.error(error.message || 'Error cargando el dashboard.')
+     } finally {
+          loading.hide()
+     }
+})
 </script>

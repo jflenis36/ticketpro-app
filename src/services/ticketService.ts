@@ -6,4 +6,4 @@ export const getTicketById = (id) => api.get(`ticket/${id}`);
 
 export const updateTicket = (id, data) => api.put(`ticket/${id}`, data);
 
-export const getAllTickets = () => api.get('ticket')
+export const getAllTickets = (filters) => api.get('/ticket', { params: filters })

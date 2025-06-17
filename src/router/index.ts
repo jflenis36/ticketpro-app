@@ -37,11 +37,23 @@ const routes = [
     meta: { requiresAuth: true },
   },
   {
-  path: '/tickets/:id',
-  name: 'TicketDetails',
-  component: () => import('../views/tickets/TicketDetails.vue'),
-  meta: { requiresAuth: true }
-}
+    path: "/tickets/:id",
+    name: "TicketDetails",
+    component: () => import("../views/tickets/TicketDetails.vue"),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/admin/settings",
+    name: "settings",
+    component: () => import("../views/settings/Settings.vue"),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/projects/:id",
+    name: "projects",
+    component: () => import("../views/project/Projects.vue"),
+    meta: { requiresAuth: true },
+  },
 ];
 
 const router = createRouter({

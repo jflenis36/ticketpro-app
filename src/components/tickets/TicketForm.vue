@@ -30,7 +30,7 @@
                <div class="pt-2">
                     <button type="submit"
                          class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg font-semibold hover:bg-blue-700 transition duration-200">
-                         Crear Ticket
+                         ALmacenar Información
                     </button>
                </div>
           </form>
@@ -39,7 +39,7 @@
 
 
 <script setup>
-import { reactive, toRefs } from 'vue'
+import { reactive } from 'vue'
 
 const emit = defineEmits(['submit'])
 
